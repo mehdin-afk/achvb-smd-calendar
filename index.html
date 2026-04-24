@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FFVB Live - DMB PTFL59</title>
+    <meta
+      name="description"
+      content="Résultats et calendrier FFVB avec classement, journée active et synchronisation live."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <div class="site-shell" id="site-shell">
+      <header class="competition-hero">
+        <div class="hero-backdrop" aria-hidden="true"></div>
+
+        <div class="hero-meta">
+          <p class="hero-kicker">Compétition officielle FFVB</p>
+          <p class="hero-timestamp" id="last-sync">-</p>
+        </div>
+
+        <div class="hero-center">
+          <img
+            class="hero-emblem"
+            src="https://www.figma.com/api/mcp/asset/cd2020e3-0cb0-4af0-a4c0-5d5f017ff1ff"
+            alt=""
+          />
+          <h1 id="page-title">Chargement de la compétition…</h1>
+          <p class="hero-season" id="season-name">Saison 2025/2026</p>
+        </div>
+
+        <div class="hero-aside">
+          <div class="hero-actions">
+            <a
+              class="button button-danger"
+              id="source-link"
+              href="https://www.ffvbbeach.org/ffvbapp/resu/vbspo_calendrier.php?saison=2025/2026&codent=PTFL59&poule=DMB"
+              target="_blank"
+              rel="noreferrer"
+              >Voir la source</a
+            >
+            <button class="button button-danger" id="reload-button" type="button">
+              Actualiser les données
+            </button>
+          </div>
+          <div class="hero-figures" aria-label="Résumé de compétition">
+            <p><strong id="teams-count">-</strong> Clubs</p>
+            <p><strong id="matches-count">-</strong> Matchs</p>
+          </div>
+        </div>
+      </header>
+
+      <nav class="competition-nav" aria-label="Navigation de compétition">
+        <div class="module-tabs" role="tablist" aria-label="Navigation de compétition">
+          <button
+            class="module-tab active"
+            id="tab-ranking"
+            type="button"
+            aria-selected="true"
+          >
+            Classement
+          </button>
+          <button
+            class="module-tab"
+            id="tab-season"
+            type="button"
+            aria-selected="false"
+          >
+            Saison
+          </button>
+        </div>
+      </nav>
+
+      <main class="page-layout">
+        <section class="content-column" aria-labelledby="results-title">
+          <section class="surface section-surface competition-module" aria-labelledby="results-title">
+            <p class="status-banner" id="status-line">Synchronisation en cours…</p>
+
+            <section
+              class="tab-panel"
+              id="ranking-panel"
+              aria-labelledby="tab-ranking"
+            >
+              <div class="panel-header">
+                <div>
+                  <p class="section-label">Classement</p>
+                  <h3>Tableau général de la poule</h3>
+                </div>
+              </div>
+
+              <div class="table-shell">
+                <table class="standings-table">
+                  <thead id="standings-head"></thead>
+                  <tbody id="standings-body"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section
+              class="tab-panel"
+              id="season-panel"
+              aria-labelledby="tab-season"
+              hidden
+            >
+              <div class="panel-header">
+                <div>
+                  <p class="section-label">Saison</p>
+                  <h3>Résultats et calendrier filtrables</h3>
+                </div>
+                <p class="section-note" id="matches-section-note">
+                  Affichage de la journée en cours.
+                </p>
+              </div>
+
+              <div class="season-filters">
+                <div class="results-tabs-header" role="tablist" aria-label="Mode d'affichage des résultats">
+                  <button
+                    class="results-tab active"
+                    id="view-by-team"
+                    type="button"
+                    aria-selected="true"
+                  >
+                    Par équipe
+                  </button>
+                  <button
+                    class="results-tab"
+                    id="view-by-matchday"
+                    type="button"
+                    aria-selected="false"
+                  >
+                    Par journée
+                  </button>
+                </div>
+
+                <div class="results-subnav">
+                  <span class="toolbar-label" id="secondary-filter-label">Journée</span>
+                  <div class="matchday-filter" id="secondary-filter" aria-label="Filtre secondaire"></div>
+                </div>
+
+                <label class="filter-toggle" for="show-upcoming-only">
+                  <input
+                    id="show-upcoming-only"
+                    type="checkbox"
+                  />
+                  <span>Afficher uniquement les prochains matchs</span>
+                </label>
+              </div>
+
+              <div class="matches-section" id="matches-section" aria-live="polite">
+                <div id="matches-root" class="match-group-list"></div>
+              </div>
+
+              <div class="season-options">
+                <label class="filter-toggle" for="show-empty-matches">
+                  <input
+                    id="show-empty-matches"
+                    type="checkbox"
+                  />
+                  <span>Afficher les matchs sans équipes</span>
+                </label>
+              </div>
+            </section>
+          </section>
+        </section>
+
+        <aside class="sidebar-column" aria-labelledby="ranking-sidebar-title">
+          <section class="surface sidebar-card sidebar-card-sticky">
+            <div class="sidebar-header">
+              <div>
+                <p class="section-label">Résumé</p>
+                <h2 id="ranking-sidebar-title">Poule en direct</h2>
+              </div>
+            </div>
+
+            <div class="standings-summary-header">
+              <span></span>
+              <span>Équipe</span>
+              <span>Pts</span>
+              <span>J.</span>
+            </div>
+            <div id="standings-summary" class="standings-summary-list"></div>
+            <button class="standings-cta" id="see-detailed-standings" type="button">
+              Voir le classement détaillé
+            </button>
+          </section>
+        </aside>
+      </main>
+    </div>
+  </body>
+</html>
